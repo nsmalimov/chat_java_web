@@ -61,7 +61,7 @@ public class SQLiteClass
 
         JSONObject jsonToReturn = new JSONObject();
 
-        jsonToReturn.put("JSON", "Hello, World!").toString();
+        //jsonToReturn.put("JSON", "Hello, World!").toString();
         System.out.println("Post successful");
     }
 
