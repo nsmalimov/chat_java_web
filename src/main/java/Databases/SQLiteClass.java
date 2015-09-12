@@ -36,33 +36,33 @@ public class SQLiteClass
 
     public static void main( String args[] )
     {
-//        Connection c = null;
-//        try {
-//            Class.forName("org.sqlite.JDBC");
-//            c = DriverManager.getConnection("jdbc:sqlite:ChatDatabase");
-//
-//            Statement stat = c.createStatement();
-//            ResultSet rs = stat.executeQuery("select userKey from freeUsers");
-//            name = rs.getString(0);
-//
-//            System.out.println(name);
-//
-//        } catch ( Exception e ) {
-//            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-//            System.exit(0);
-//        }
-//        System.out.println("Opened database successfully");
+        Connection c = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection("jdbc:sqlite:ChatDatabase");
+
+            Statement stat = c.createStatement();
+            ResultSet rs = stat.executeQuery("select keyUser from freeUsers");
+            name = rs.getString(0);
+
+            System.out.println(name);
+
+        } catch ( Exception e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            System.exit(0);
+        }
+        //System.out.println("Opened database successfully");
         //System.out.println(getName());
 
-        ArrayList<String> freeUsersArray = new ArrayList<String>();
-        freeUsersArray.add("111");
+        //ArrayList<String> freeUsersArray = new ArrayList<String>();
+        //freeUsersArray.add("111");
 
-        freeUsersArray.remove("sgsklgjkslg");
+        //freeUsersArray.remove("sgsklgjkslg");
 
-        JSONObject jsonToReturn = new JSONObject();
+        //JSONObject jsonToReturn = new JSONObject();
 
         //jsonToReturn.put("JSON", "Hello, World!").toString();
-        System.out.println("Post successful");
+        //System.out.println("Post successful");
     }
 
 }

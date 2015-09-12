@@ -1,6 +1,6 @@
 function login(jsonData){
     $.ajax({
-        url: "http://localhost:8080/auto",
+        url: "http://localhost:8080/chat",
         type: 'POST',
         data: jsonData,
 
@@ -17,17 +17,19 @@ function login(jsonData){
     });
 }
 
-function createJson() { 
+function createJson() {
+         var randomKey = Math.floor(Math.random() * (1000000 - 100000 + 1)) + 100000;
          var json_create = new Object();
          json_create.name = $("#NameInput").val();
-         json_create.key = $("#KeyInput").val();
-         json_create.command = "0";
+         json_create.keygen = $("#KeyInput").val();
+         json_create.command = "1";
+         json_create.randomKey = randomKey.toString();
          return JSON.stringify(json_create);
 }
 
 $(document).ready(
   function () {
-     $("#NameInput").val("Руслан");
+     $("#NameInput").val("Ruslan");
      $("#KeyInput").val("29125-4L52L");
 
      $('#button_sent').click(function() {
@@ -35,7 +37,8 @@ $(document).ready(
          login(jsonData);
 
          var someKey = "11127585";
-         window.location.href  = "http://localhost:8080/hello/" + someKey;
+         alert(someKey);
+         //window.location.href  = "http://localhost:8080/chat/" + someKey;
      });
   }
 );
