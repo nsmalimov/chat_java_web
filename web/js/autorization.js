@@ -9,36 +9,40 @@ function login(jsonData){
         //contentType: 'application/json',
  
         success: function (data) {
-            alert("success");
+            //alert(data['answer']);
+            if (data['answer'] == "ok") {
+                window.location.href = "http://localhost:8080/chat";
+            }
+            else
+            {
+                alert("incorrect key");
+            }
+            //alert("success");
         },
         error: function(xhr, status, error){
-          alert("error");
+          //alert("error");
         }
     });
 }
 
 function createJson() {
-         var randomKey = Math.floor(Math.random() * (1000000 - 100000 + 1)) + 100000;
+         //var randomKey = Math.floor(Math.random() * (1000000 - 100000 + 1)) + 100000;
          var json_create = new Object();
          json_create.name = $("#NameInput").val();
-         json_create.keygen = $("#KeyInput").val();
+         json_create.keyGen = $("#KeyInput").val();
          json_create.command = "1";
-         json_create.randomKey = randomKey.toString();
+         //json_create.randomKey = randomKey.toString();
          return JSON.stringify(json_create);
 }
 
 $(document).ready(
   function () {
      $("#NameInput").val("Ruslan");
-     $("#KeyInput").val("29125-4L52L");
+     $("#KeyInput").val("9YQH-E8CI-N2XJ-2YV");
 
      $('#button_sent').click(function() {
          var jsonData = createJson();
          login(jsonData);
-
-         var someKey = "11127585";
-         alert(someKey);
-         //window.location.href  = "http://localhost:8080/chat/" + someKey;
      });
   }
 );

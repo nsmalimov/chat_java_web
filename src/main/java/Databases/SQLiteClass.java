@@ -12,57 +12,55 @@ import java.util.logging.*;
 
 public class SQLiteClass
 {
-    static String name = "";
-    public static String getName() {
-        try {
-            Context ctx = new InitialContext();
+    public static Connection conn;
+    public static Statement stat;
+    public static ResultSet rs;
 
-
-            DataSource ds = (DataSource) ctx.lookup("java:comp/env/jdbc/ChatDatabase");
-
-            //System.out.println(1);
-            Connection conn = ds.getConnection();
-            Statement stat = conn.createStatement();
-            ResultSet rs = stat.executeQuery("select userKey from freeUsers");
-            name = rs.getString(0);
-        } catch (SQLException se) {
-            return "exception 1";
-        } catch (NamingException ne) {
-            System.out.println(ne);
-            return "exception 2";
-        }
-        return name;
-    }
-
-    public static void main( String args[] )
+    public static void Conn() throws ClassNotFoundException, SQLException, NamingException
     {
-        Connection c = null;
-        try {
-            Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:ChatDatabase");
-
-            Statement stat = c.createStatement();
-            ResultSet rs = stat.executeQuery("select keyUser from freeUsers");
-            name = rs.getString(0);
-
-            System.out.println(name);
-
-        } catch ( Exception e ) {
-            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            System.exit(0);
-        }
-        //System.out.println("Opened database successfully");
-        //System.out.println(getName());
-
-        //ArrayList<String> freeUsersArray = new ArrayList<String>();
-        //freeUsersArray.add("111");
-
-        //freeUsersArray.remove("sgsklgjkslg");
-
-        //JSONObject jsonToReturn = new JSONObject();
-
-        //jsonToReturn.put("JSON", "Hello, World!").toString();
-        //System.out.println("Post successful");
+        Class.forName("org.sqlite.JDBC");
+        conn = DriverManager.getConnection("jdbc:sqlite:/Users/Nurislam/Downloads/chat_java_web/ChatDatabase");
     }
 
+    public static boolean checkKeyGenDb(String keyGen) throws ClassNotFoundException, SQLException
+    {
+        stat = conn.createStatement();
+        ResultSet rs = stat.executeQuery("select id from keyGens where keyGen = '" + keyGen + "'");
+        while (rs.next()){
+            rs.close();
+            stat.close();
+            return true;
+        }
+
+        rs.close();
+        stat.close();
+        return false;
+    }
+
+    public static void addUserDatabase(String userName, String keyGen) throws ClassNotFoundException, SQLException
+    {
+        stat = conn.createStatement();
+
+        int n = stat.executeUpdate("UPDATE keyGens SET isUse = '1' WHERE keyGen = '" + keyGen + "'");
+
+        try {
+            PreparedStatement statement = conn.prepareStatement("INSERT INTO freeUsers (name,  userKeyGen) VALUES ( ?, ?)");
+            statement.setString(1, userName);
+            statement.setString(2, keyGen);
+
+            statement.execute();
+            statement.close();
+        }
+        catch (Exception e)
+        {
+            //nothing
+        }
+
+        stat.close();
+    }
+
+    public static void CloseDB() throws ClassNotFoundException, SQLException
+    {
+        conn.close();
+    }
 }
