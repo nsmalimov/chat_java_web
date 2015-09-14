@@ -10,23 +10,20 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
 
-public class SQLiteClass
-{
+public class SQLiteClass {
     public static Connection conn;
     public static Statement stat;
     public static ResultSet rs;
 
-    public static void Conn() throws ClassNotFoundException, SQLException, NamingException
-    {
+    public static void Conn() throws ClassNotFoundException, SQLException, NamingException {
         Class.forName("org.sqlite.JDBC");
         conn = DriverManager.getConnection("jdbc:sqlite:/Users/Nurislam/Downloads/chat_java_web/ChatDatabase");
     }
 
-    public static boolean checkKeyGenDb(String keyGen) throws ClassNotFoundException, SQLException
-    {
+    public static boolean checkKeyGenDb(String keyGen) throws ClassNotFoundException, SQLException {
         stat = conn.createStatement();
         ResultSet rs = stat.executeQuery("select id from keyGens where keyGen = '" + keyGen + "'");
-        while (rs.next()){
+        while (rs.next()) {
             rs.close();
             stat.close();
             return true;
@@ -37,8 +34,7 @@ public class SQLiteClass
         return false;
     }
 
-    public static void addUserDatabase(String userName, String keyGen) throws ClassNotFoundException, SQLException
-    {
+    public static void addUserDatabase(String userName, String keyGen) throws ClassNotFoundException, SQLException {
         stat = conn.createStatement();
 
         int n = stat.executeUpdate("UPDATE keyGens SET isUse = '1' WHERE keyGen = '" + keyGen + "'");
@@ -50,17 +46,15 @@ public class SQLiteClass
 
             statement.execute();
             statement.close();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             //nothing
         }
 
         stat.close();
     }
 
-    public static void CloseDB() throws ClassNotFoundException, SQLException
-    {
+    public static void CloseDB() throws ClassNotFoundException, SQLException {
         conn.close();
     }
+    /**fjjfjf*/
 }

@@ -13,8 +13,7 @@ import org.json.JSONObject;
 import org.json.JSONException;
 
 public class ControlClass extends HttpServlet {
-    public static boolean checkKeyGen(String name, String key) throws ClassNotFoundException, SQLException, NamingException
-    {
+    public static boolean checkKeyGen(String name, String key) throws ClassNotFoundException, SQLException, NamingException {
         SQLiteClass.Conn();
         boolean answer = SQLiteClass.checkKeyGenDb(key);
 
@@ -32,7 +31,7 @@ public class ControlClass extends HttpServlet {
         Cookie[] cookies = null;
         cookies = request.getCookies();
 
-        if(cookies != null ){
+        if (cookies != null) {
             response.setContentType("text/html");
             RequestDispatcher dispatcher = request.getRequestDispatcher("chat.html");
             if (dispatcher != null) {
@@ -44,6 +43,9 @@ public class ControlClass extends HttpServlet {
 //                    System.out.println(cookie.getValue());
 //                }
 //            }
+        } else {
+            PrintWriter out = response.getWriter();
+            out.println("Permission denied");
         }
 
 
@@ -68,12 +70,15 @@ public class ControlClass extends HttpServlet {
 
             PrintWriter out = response.getWriter();
 
-            while(it.hasNext())
-            {
+            while (it.hasNext()) {
                 String key = it.next().toString();
-                if (key.equals("command"))
-                {
-                    int command = 1;
+                if (key.equals("command")) {
+                    //int command = 1;
+
+                    //System.out.println(key);
+
+                    int command = Integer.parseInt(jsonObject.getString(key));
+
                     switch (command) {
                         case 1:  //авторизация
                             String name = (String) jsonObject.get("name");
@@ -92,9 +97,7 @@ public class ControlClass extends HttpServlet {
                                 Cookie acssesKeyCook = new Cookie("userKey", keyGen);
                                 acssesKeyCook.setMaxAge(60 * 60 * 24 * 5);
                                 response.addCookie(acssesKeyCook);
-                            }
-                            else
-                            {
+                            } else {
                                 //ошибка или не правильный ключ
                                 JSONObject jsonToReturn = new JSONObject();
                                 jsonToReturn.put("answer", "wrong").toString();
@@ -102,9 +105,13 @@ public class ControlClass extends HttpServlet {
                             }
 
                             break;
-                        case 2:  //
+                        case 2:  //get name
+                            JSONObject jsonToReturner = new JSONObject();
+                            jsonToReturner.put("answer", "Ruslan").toString();
+                            out.println(jsonToReturner);
+                            //System.out.println(command);
                             break;
-                        case 3: //
+                        case 3: //who my connector
                             break;
                         default:
                             System.out.println("default switch");
@@ -115,10 +122,6 @@ public class ControlClass extends HttpServlet {
         } catch (Exception e) {
             System.out.println(e);
         }
-
-
-
-
 
 
     }

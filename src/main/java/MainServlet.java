@@ -5,14 +5,14 @@ import javax.servlet.http.HttpServlet;
 import javax.websocket.server.ServerEndpoint;
 import java.text.ParseException;
 import java.util.Iterator;
+
 import org.json.JSONObject;
 import org.json.JSONException;
 
-public class MainServlet extends HttpServlet{
+public class MainServlet extends HttpServlet {
 
-    public static boolean userExist(String keyUser)
-    {
-       return true;
+    public static boolean userExist(String keyUser) {
+        return true;
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -21,7 +21,7 @@ public class MainServlet extends HttpServlet{
         Cookie[] cookies = null;
         cookies = request.getCookies();
 
-        if(cookies != null ){
+        if (cookies != null) {
             response.setContentType("text/html");
             RequestDispatcher dispatcherChat = request.getRequestDispatcher("chat.html");
             if (dispatcherChat != null) {
@@ -30,11 +30,11 @@ public class MainServlet extends HttpServlet{
         }
         //куки небыли присланы
         else {
-             response.setContentType("text/html");
-             RequestDispatcher dispatcherAuto = request.getRequestDispatcher("autorization.html");
-             if (dispatcherAuto != null) {
-                 dispatcherAuto.forward(request, response);
-                 }
+            response.setContentType("text/html");
+            RequestDispatcher dispatcherAuto = request.getRequestDispatcher("autorization.html");
+            if (dispatcherAuto != null) {
+                dispatcherAuto.forward(request, response);
+            }
         }
     }
 }
