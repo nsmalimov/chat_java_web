@@ -122,10 +122,25 @@ public class ChatServlet {
                     break;
                 }
             }
+
+            for (Session session : sessions) {
+                if (session.getId().equals(needSent)) {
+                    session.getBasicRemote().sendText("{\"answer\":" + "\"" + "disconnect" + "\"" + "}");
+                    break;
+                }
+            }
+
             System.out.println("disconnect");
         }
 
         if (command.equals("find_interlocutor")) {
+            String needSent = getInterlocutor(client);
+            for (Session session : sessions) {
+                if (session.getId().equals(needSent)) {
+                    session.getBasicRemote().sendText("{\"answer\":" + "\"" + "disconnect" + "\"" + "}");
+                    break;
+                }
+            }
             System.out.println("find_interlocutor");
         }
 

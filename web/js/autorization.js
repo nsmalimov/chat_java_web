@@ -1,6 +1,6 @@
-function login(jsonData) {
+function login(serverUrl, jsonData) {
     $.ajax({
-        url: "http://localhost:8080/chat",
+        url: serverUrl + "chat",
         type: 'POST',
         data: jsonData,
 
@@ -11,7 +11,7 @@ function login(jsonData) {
         success: function (data) {
             //alert(data['answer']);
             if (data['answer'] == "ok") {
-                window.location.href = "http://localhost:8080/chat";
+                window.location.href = serverUrl + "chat";
             }
             else {
                 alert("incorrect key");
@@ -36,12 +36,22 @@ function createJson() {
 
 $(document).ready(
     function () {
-        $("#NameInput").val("Ruslan");
+
+        var serverHostName = window.location.hostname;
+
+        var serverProtocolName = window.location.protocol;
+
+        var portName = window.location.port;
+
+        if (portName.length == 0){portName = "80"; }
+        var serverPath = serverProtocolName + "//" + serverHostName + ":" + portName + "/";
+
+        $("#NameInput").val("Руслан");
         $("#KeyInput").val("9YQH-E8CI-N2XJ-2YV");
 
         $('#button_sent').click(function () {
             var jsonData = createJson();
-            login(jsonData);
+            login(serverPath, jsonData);
         });
     }
 );
