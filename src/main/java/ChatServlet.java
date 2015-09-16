@@ -1,18 +1,14 @@
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import javax.servlet.http.Cookie;
 import javax.websocket.EncodeException;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
-import java.util.Map;
-import java.util.HashMap;
 
 @ServerEndpoint(value = "/chat")
 public class ChatServlet {
@@ -22,27 +18,18 @@ public class ChatServlet {
 
     private static final ArrayList<String[]> connectedUsers = new ArrayList<String[]>();
 
-    Map userSessionId = new HashMap<String, String>();
+    private static final Map userSessionId = new HashMap<String, String>();
 
     @OnOpen
     public void onOpen(Session session) {
-
         sessions.add(session);
-
-        if (freeUsersArray.size() == 0) {
-            freeUsersArray.add(session.getId());
-        } else {
-            String waitingUsersId = freeUsersArray.get(0);
-            String[] someArray = {session.getId(), waitingUsersId};
-            connectedUsers.add(someArray.clone());
-
-            freeUsersArray.remove(freeUsersArray.get(0));
-        }
+        //freeUsersArray.add(session.getId());
     }
 
     @OnClose
     public void onClose(Session session) {
         sessions.remove(session);
+
         freeUsersArray.remove(session.getId());
 
         for (int i = 0; i < connectedUsers.size(); i++) {
@@ -58,7 +45,9 @@ public class ChatServlet {
 
     public static String getInterlocutor(Session client) {
         String needSent = "";
+
         for (int i = 0; i < connectedUsers.size(); i++) {
+
             String firstUser = connectedUsers.get(i)[0];
             String secondUser = connectedUsers.get(i)[1];
 
@@ -79,33 +68,76 @@ public class ChatServlet {
     public void onMessage(String message, Session client)
             throws IOException, EncodeException {
 
-        //start chat roulette
-        String needSent = getInterlocutor(client);
-        //JSONObject jsonObject1 = new JSONObject(message);
+        JSONObject jsonObject = new JSONObject(message);
+        String command = jsonObject.getString("command");
 
-        try {
-            JSONObject jsonObject = new JSONObject(message);
-            if (jsonObject.has("connect")) {
-                String name = jsonObject.getString("name");
-                userSessionId.put(client.getId(), name);
+        String userName = jsonObject.getString("name");
+        userSessionId.put(client.getId(), userName);
 
-                String interlocutorName =  userSessionId.get(needSent.toString()).toString();
+        if (command.equals("connect")) {
 
-                client.getBasicRemote().sendText("{\"interlocutor\":" + "\"" + interlocutorName + "\"" + "}");
+            freeUsersArray.add(client.getId());
+
+            //если свободных юзеров нет
+            if (freeUsersArray.size() == 1)
+            {
+                client.getBasicRemote().sendText("{\"answer\":" + "\"" + "not_free_users" + "\"" + "}");
                 return;
             }
-        } catch (Exception e) {
-            System.out.println("json faild message");
+
+            //добавили в конец списка
+            String waitingUsersId = freeUsersArray.get(0);
+
+            String[] someArray = {client.getId(), waitingUsersId};
+
+            client.getBasicRemote().sendText("{\"answer\":" + "\"" + "connected" + "\"" + ","
+                    + "\"interlocutor\":" + "\"" + userSessionId.get(client.getId()) + "\"" + "}");
+
+            for (Session session : sessions) {
+                if (session.getId().equals(waitingUsersId)) {
+                    session.getBasicRemote().sendText("{\"answer\":" + "\"" + "connected" + "\"" + ","
+                            + "\"interlocutor\":" + "\"" + userSessionId.get(waitingUsersId) + "\"" + "}");
+                    break;
+                }
+            }
+
+            freeUsersArray.remove(freeUsersArray.get(0));
+
+            freeUsersArray.remove(client.getId());
+
+            connectedUsers.add(someArray.clone());
+
         }
 
-        //System.out.println(client.getId());
+        if (command.equals("disconnect")) {
+            String needSent = getInterlocutor(client);
+            freeUsersArray.add(needSent);
 
+            for (int i = 0; i < connectedUsers.size(); i++) {
+                String fistUser = connectedUsers.get(i)[0];
+                String secondUser = connectedUsers.get(i)[1];
 
-        for (Session session : sessions) {
-            if (session.getId().equals(needSent)) {
-                System.out.println(session.getId() + " " + needSent);
-                session.getBasicRemote().sendText(message);
-                break;
+                if (fistUser.equals(client.getId()) || secondUser.equals(client.getId())) {
+                    connectedUsers.remove(i);
+                    break;
+                }
+            }
+            System.out.println("disconnect");
+        }
+
+        if (command.equals("find_interlocutor")) {
+            System.out.println("find_interlocutor");
+        }
+
+        if (command.equals("sent_message")) {
+            String needSent = getInterlocutor(client);
+
+            for (Session session : sessions) {
+                if (session.getId().equals(needSent)) {
+                    session.getBasicRemote().sendText("{\"answer\":" + "\"" + "message" + "\"" + ","
+                            + "\"message\":" + "\"" + jsonObject.getString("message") + "\"" + "}");
+                    break;
+                }
             }
         }
     }

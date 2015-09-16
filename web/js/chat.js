@@ -1,19 +1,12 @@
-function chatSendMessage(message) {
-
-    var json_create = new Object();
-    json_create.name = $('#greeting').text().replace("Hello ", "");
-    json_create.message = message;
-    var json = JSON.stringify(json_create);
-
-    ws.send(json);
-    $(".chat").append('<li class="right clearfix"><span class="chat-img pull-left"></span><div class="chat-body clearfix"><div class="header"><strong class="primary-font">You</strong></div><p>' + message + '</p></div></li>');
+function upDateChatBoxSent(name, message) {
+    $(".chat").append('<li class="right clearfix"><span class="chat-img pull-left"></span><div class="chat-body clearfix"><div class="header"><strong class="primary-font">' + name + '</strong></div><p>' + message + '</p></div></li>');
     $('#btn-input').val('');
     var newmsg_top = parseInt($('.panel-body')[0].scrollHeight);
     $('.panel-body').scrollTop(newmsg_top - 100);
 }
 
-function chatGetMessage(message) {
-    $(".chat").append('<li class="left clearfix"><span class="chat-img pull-left"></span><div class="chat-body clearfix"><div class="header"><strong class="primary-font">Interlocutor</strong></div><p>' + message + '</p></div></li>');
+function upDateChatBoxGet(name, message) {
+    $(".chat").append('<li class="left clearfix"><span class="chat-img pull-left"></span><div class="chat-body clearfix"><div class="header"><strong class="primary-font">' + name + '</strong></div><p>' + message + '</p></div></li>');
     var newmsg_top = parseInt($('.panel-body')[0].scrollHeight);
     $('.panel-body').scrollTop(newmsg_top - 100);
 }
@@ -22,25 +15,6 @@ function createJson(text) {
     var json_create = new Object();
     json_create.command = text;
     return JSON.stringify(json_create);
-}
-
-function senderFunc(jsonData) {
-    $.ajax({
-        url: "http://localhost:8080/auto",
-        type: 'POST',
-        data: jsonData,
-
-        dataType: 'json',
-        async: true,
-        //contentType: 'application/json',
-
-        success: function (data) {
-            alert("success");
-        },
-        error: function (xhr, status, error) {
-            alert("error");
-        }
-    });
 }
 
 function createJsonGetName() {
@@ -59,11 +33,9 @@ function getName() {
         async: true,
         //contentType: 'application/json',
 
-        success: function (data) {
-            //alert(data['answer']);
-            $('#greeting').text("Hello " + data["answer"]);
-            //window.location.href = "http://localhost:8080/chat";
-            //alert("success");
+        success: function (event) {
+            //var jsonGet = JSON.parse(event.data);
+            $('#greeting').text("Hello " + event["answer"]);
         },
         error: function (xhr, status, error) {
             //alert("error");
@@ -73,30 +45,48 @@ function getName() {
 
 $(document).ready(
     function () {
+        //имя пользователя другим post запросом
         getName();
+
+        var interlocutorName = "";
+
         serverUrl = "localhost:8080";
         ws = new WebSocket("ws://" + serverUrl + "/chat");
 
         ws.onopen = function (event) {};
 
+
+
         ws.onmessage = function (event) {
-            try {
 
-                var jsonGet = JSON.parse(event.data);
+            var jsonGet = JSON.parse(event.data);
 
-                //alert(event.data);
-                var interlocutor = jsonGet["interlocutor"];
-                if (interlocutor == "")
-                {
-                    alert("Free users not found");
-                }
-                else
-                {
-                    alert(interlocutor);
-                }
-            } catch(e) {}
+            var answer = jsonGet["answer"];
 
-            //chatGetMessage(event.data);
+            if (answer == "not_free_users")
+            {
+                $("#main_container").css("visibility", "hidden");
+                //$("#stop_chat").prop('disabled', true);
+                //$("#start_chat").prop('disabled', false);
+                //$("#find_new_interlocutor").prop('disabled', true);
+                //alert("Free users not found");
+            }
+
+            if (answer == "connected")
+            {
+                //alert("connected");
+                interlocutorName = jsonGet["interlocutor"];
+                $("#connected_with").text(interlocutorName);
+                $("#main_container").css("visibility", "visible");
+            }
+
+
+            //alert(answer);
+            if (answer == "message")
+            {
+                 upDateChatBoxGet("You", jsonGet["message"]);
+            }
+            //upDateChatBoxGet(event.data);
         };
 
         ws.onclose = function (event) {};
@@ -104,39 +94,55 @@ $(document).ready(
         var newmsg_top = parseInt($('.panel-body')[0].scrollHeight);
         $('.panel-body').scrollTop(newmsg_top - 100);
 
+        $("#start_chat").prop('disabled', false);
         $("#stop_chat").prop('disabled', true);
         $("#find_new_interlocutor").prop('disabled', true);
-
-
-        var randomKey = Math.floor(Math.random() * (1000000 - 100000 + 1)) + 100000;
-        $("#keyNumber").val(randomKey);
-        $('#btn-chat').click(function () {
-
-            var message = $('#text_input').val();
-            chatSendMessage(message);
-        });
 
         $('#start_chat').click(function () {
             var json_create = new Object();
             json_create.name = $('#greeting').text().replace("Hello ", "");
-            json_create.connect = "1";
+            json_create.command = "connect";
             var json = JSON.stringify(json_create);
             ws.send(json);
-            //alert("111");
+
+            $("#stop_chat").prop('disabled', false);
+            $("#start_chat").prop('disabled', true);
+            $("#find_new_interlocutor").prop('disabled', false);
         });
 
+        $('#stop_chat').click(function () {
+            var json_create = new Object();
+            json_create.name = $('#greeting').text().replace("Hello ", "");
+            json_create.command = "disconnect";
+            var json = JSON.stringify(json_create);
+            ws.send(json);
 
+            $("#stop_chat").prop('disabled', true);
+            $("#start_chat").prop('disabled', false);
+            $("#find_new_interlocutor").prop('disabled', true);
+        });
 
+        $('#find_new_interlocutor').click(function () {
+            var json_create = new Object();
+            json_create.name = $('#greeting').text().replace("Hello ", "");
+            json_create.command = "find_interlocutor";
+            var json = JSON.stringify(json_create);
+            ws.send(json);
+        });
 
-            //var commandJson = createJson("startchat");
-            //var serverUrlAutorization = "http://" + serverUrl + "/";
+        $('#btn-chat').click(function () {
+            var messageText = $('#text_input').val();
 
-            //senderFunc(commandJson);
+            var json_create = new Object();
+            var clientName = $('#greeting').text().replace("Hello ", "");
+            json_create.name = clientName;
+            json_create.command = "sent_message";
+            json_create.message = messageText;
+            var json = JSON.stringify(json_create);
+            ws.send(json);
 
-            //$("#stop_chat").prop('disabled', false);
-            //$("#start_chat").prop('disabled', true);
-            //$("#find_new_interlocutor").prop('disabled', false);
-
+            upDateChatBoxSent(clientName, messageText);
+        });
 
     }
 );

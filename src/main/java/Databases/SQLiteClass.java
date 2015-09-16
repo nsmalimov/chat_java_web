@@ -53,6 +53,30 @@ public class SQLiteClass {
         stat.close();
     }
 
+    public static String getNameDb(String keyGen) throws ClassNotFoundException, SQLException
+    {
+        //String answer = "";
+
+        stat = conn.createStatement();
+
+
+
+        ResultSet rs = stat.executeQuery("select name from freeUsers where userKeyGen = '" + keyGen + "'");
+
+
+        while (rs.next()) {
+            String answer = rs.getString("name");
+            rs.close();
+            stat.close();
+            return answer;
+        }
+
+        rs.close();
+        stat.close();
+
+        return "";
+    }
+
     public static void CloseDB() throws ClassNotFoundException, SQLException {
         conn.close();
     }

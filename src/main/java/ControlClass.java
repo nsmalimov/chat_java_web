@@ -68,14 +68,13 @@ public class ControlClass extends HttpServlet {
             JSONObject jsonObject = new JSONObject(jb.toString());
             Iterator it = jsonObject.keys();
 
+            //response.setHeader("Content-Type", "text/plain");
+            response.setContentType("text/html;charset=UTF-8");
             PrintWriter out = response.getWriter();
 
             while (it.hasNext()) {
                 String key = it.next().toString();
                 if (key.equals("command")) {
-                    //int command = 1;
-
-                    //System.out.println(key);
 
                     int command = Integer.parseInt(jsonObject.getString(key));
 
@@ -83,7 +82,6 @@ public class ControlClass extends HttpServlet {
                         case 1:  //авторизация
                             String name = (String) jsonObject.get("name");
                             String keyGen = (String) jsonObject.get("keyGen");
-                            //String randomKey = (String) jsonObject.get("randomKey");
 
                             //проверка ключа и запись юзера в базу данных
                             boolean checkUser = checkKeyGen(name, keyGen);
@@ -91,8 +89,8 @@ public class ControlClass extends HttpServlet {
                             //если всё нормально, то отправить куки
                             if (checkUser) {
                                 JSONObject jsonToReturn = new JSONObject();
-                                jsonToReturn.put("answer", "ok").toString();
-                                out.println(jsonToReturn);
+                                jsonToReturn.put("answer", "ok");
+                                out.println(jsonToReturn.toString());
 
                                 Cookie acssesKeyCook = new Cookie("userKey", keyGen);
                                 acssesKeyCook.setMaxAge(60 * 60 * 24 * 5);
@@ -100,16 +98,28 @@ public class ControlClass extends HttpServlet {
                             } else {
                                 //ошибка или не правильный ключ
                                 JSONObject jsonToReturn = new JSONObject();
-                                jsonToReturn.put("answer", "wrong").toString();
-                                out.println(jsonToReturn);
+                                jsonToReturn.put("answer", "wrong");
+                                out.println(jsonToReturn.toString());
                             }
 
                             break;
                         case 2:  //get name
                             JSONObject jsonToReturner = new JSONObject();
-                            jsonToReturner.put("answer", "Ruslan").toString();
-                            out.println(jsonToReturner);
-                            //System.out.println(command);
+                            Cookie[] cookies = request.getCookies();
+                            String keyGenGetUser = null;
+                            for(Cookie cookie : cookies){
+                                if("userKey".equals(cookie.getName())){
+                                    keyGenGetUser = cookie.getValue();
+                                }
+                            }
+
+                            SQLiteClass.Conn();
+                            String nickname = SQLiteClass.getNameDb(keyGenGetUser);
+                            SQLiteClass.CloseDB();
+
+                            jsonToReturner.put("answer", nickname);
+                            //System.out.println(jsonToReturner);
+                            out.println(jsonToReturner.toString());
                             break;
                         case 3: //who my connector
                             break;
