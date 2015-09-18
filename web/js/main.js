@@ -45,6 +45,8 @@ var offerOptions = {
   offerToReceiveVideo: 1
 };
 
+var myVideoTracker = "12";
+
 function getName(pc) {
     if (pc === pc1)
     {
@@ -87,6 +89,14 @@ function start() {
   .catch(function(e) {
     alert('getUserMedia() error: ' + e.name);
   });
+}
+
+function initVideo(){
+     pc1 = new RTCPeerConnection(null);
+
+     pc1.onicecandidate = function(e) {
+         onIceCandidate(pc1, e);
+    };
 }
 
 function call() {
@@ -191,35 +201,13 @@ function onCreateAnswerSuccess(desc) {
 function onIceCandidate(pc, event) {
   if (event.candidate) {
     //получаем объект собеседника (противоположный)
-    var some = event.candidate.candidate;
+    //var some = event.candidate.candidate;
 
-
-    //alert(some);
-
-      //var methods = [];
-      //for (var m in event.candidate) {
-      //    if (typeof obj[m] == "function") {
-      //        methods.push(m);
-      //    }
-      //}
-      //alert(methods.join(","));
-
-    //var new_event = event.cloneContents();
-    //new_event.candidate.candidate = event.candidate.candidate;
     var serialize = JSON.stringify(event.candidate);
-
-      var myobj = JSON.parse(serialize);
 
     getOtherPc(pc).addIceCandidate(new RTCIceCandidate(event.candidate));
 
     trace(getName(pc) + ' ICE candidate: \n' + event.candidate.candidate);
-  }
-}
-
-function onIceStateChange(pc, event) {
-  if (pc) {
-    //trace(getName(pc) + ' ICE state: ' + pc.iceConnectionState);
-    //console.log('ICE state change event: ', event);
   }
 }
 

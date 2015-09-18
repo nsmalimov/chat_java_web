@@ -25,11 +25,16 @@
 
 .panel .slidedown .glyphicon, .chat .glyphicon {
     margin-right: 5px;
+
 }
 
 .panel-body {
     overflow-y: scroll;
-    height: 350px;
+    height: 230px;
+}
+
+#chat_window {
+    margin: 50px 0 0 0;
 }
 
 ::-webkit-scrollbar-track {

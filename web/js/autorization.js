@@ -9,14 +9,12 @@ function login(serverUrl, jsonData) {
         //contentType: 'application/json',
 
         success: function (data) {
-            alert(data['answer']);
             if (data['answer'] == "ok") {
                 window.location.href = serverUrl + "/chat";
             }
             else {
                 alert("incorrect key");
             }
-            alert("success");
         },
         error: function (xhr, status, error) {
             alert("error");
@@ -56,10 +54,7 @@ $(document).ready(
 
         $('#button_sent').click(function () {
             var jsonData = createJson();
-
             login(serverPath, jsonData);
-
-            alert(serverPath);
         });
     }
 );

@@ -1,85 +1,82 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-    <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css"
           rel="stylesheet" type="text/css">
     <link href="http://pingendo.github.io/pingendo-bootstrap/themes/default/bootstrap.css"
           rel="stylesheet" type="text/css">
-    <link href="css/chat.css"
-          rel="stylesheet" type="text/css">
+
+    <link href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="css/new_main.css"/>
+    <link rel="stylesheet" href="css/main.css"/>
+    <link rel="stylesheet" href="css/chat.css"/>
+
     <script type="text/javascript" src="js/chat.js"></script>
+    <script src="js/adapter.js"></script>
+
+    <script src="js/lib/ga.js"></script>
+
 </head>
 
 <body>
 <div class="section">
+    <div class="container">
+        <div class="col-md-5">
 
-    <div class="container" id="main_container">
-        <div class="row">
-            <div class="col-md-3">
-                <div class="container">
+            <div class="row">
+                <button id="startButton">Start</button>
+                <button id="callButton">Call</button>
+                <button id="hangupButton">Hang Up</button>
+            </div>
 
-                    <div class="row">
-                        <div class="col-md-2">
-                            <form role="form">
-                                <h3 id="greeting"></h3>
-                                <button type="button" class="btn btn-default" id="start_chat">Start chat</button>
-                                <p></p>
-                                <button type="button" class="btn btn-default" id="stop_chat">Stop chat</button>
-                                <p></p>
-                                <button type="button" class="btn btn-default" id="find_new_interlocutor">Find new
-                                    interlocutor
-                                </button>
-                                <p></p>
+            <div class="row">
+                <button id="start_chat">Start chat</button>
+                <button id="stop_chat">Stop chat</button>
+                <button id="find_new_interlocutor">Find new interlocutor</button>
+            </div>
 
-                                <p></p>
+            <div class="row">
+                <video id="localVideo" autoplay muted></video>
+            </div>
 
-                                <p></p>
+            <div class="row">
+                <video id="remoteVideo" autoplay></video>
+            </div>
 
-                                <p>You connected with:</p>
 
-                                <h3 id="connected_with">None</h3>
-                            </form>
-                        </div>
+        </div>
+
+        <div class="col-md-7">
+
+            <p id="your_name">Hello:</p>
+            <p id="interlocutor_name">You connected with:</p>
+
+            <div class="panel panel-primary" id="chat_window">
+
+                <div class="panel-body">
+                    <ul class="chat">
+                    </ul>
+                </div>
+
+                <div class="panel-footer">
+                    <div class="form-group">
+                        <textarea class="form-control custom-control" rows="3" id="text_input"></textarea>
                     </div>
+
+                    <span class="input-group-btn">
+                         <button class="btn btn-warning btn-sm" id="btn-chat">Send</button>
+                    </span>
+
                 </div>
             </div>
 
-            <div class="col-md-3">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-5">
-                            <div class="panel panel-primary">
-                                <div class="panel-body">
-                                    <ul class="chat">
-                                    </ul>
-                                </div>
-                                <div class="panel-footer">
-                                    <div class="form-group">
-                                        <textarea class="form-control custom-control" rows="3"
-                                                  id="text_input"></textarea>
-                                    </div>
-
-                        <span class="input-group-btn">
-                            <button class="btn btn-warning btn-sm" id="btn-chat">
-                                Send
-                            </button>
-                        </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
-
 </body>
 
 </html>
-

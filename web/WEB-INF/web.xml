@@ -36,16 +36,6 @@
         <url-pattern></url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>VideoServlet</servlet-name>
-        <servlet-class>VideoServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>VideoServlet</servlet-name>
-        <url-pattern>/videochat</url-pattern>
-    </servlet-mapping>
-
     <resource-ref>
         <description>DB Connection</description>
         <res-ref-name>jdbc/ChatDatabase</res-ref-name>

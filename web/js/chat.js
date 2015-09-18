@@ -35,10 +35,9 @@ function getName(serverUrl) {
 
         success: function (event) {
             //var jsonGet = JSON.parse(event.data);
-            $('#greeting').text("Hello " + event["answer"]);
+            $('#your_name').text("Hello " + event["answer"]);
         },
         error: function (xhr, status, error) {
-            //alert("error");
         }
     });
 }
@@ -46,7 +45,6 @@ function getName(serverUrl) {
 $(document).ready(
     function () {
         //имя пользователя другим post запросом
-
 
         var serverHostName = window.location.hostname;
 
@@ -62,23 +60,20 @@ $(document).ready(
             serverPath += "/roulette"
         }
 
-        //alert(serverPath);
-
         getName(serverPath);
 
-        //alert(serverPath);
+        $("head").append('<script type="text/javascript" src="' + "js/main.js" + '"></script>');
 
         var interlocutorName = "";
 
         $('#btn-input').val('');
+        $('#text_input').val('');
 
         ws = new WebSocket("ws://" + serverHostName + ":" + portName + "/chatwork");
 
         //alert(serverHostName);
 
         ws.onopen = function (event) {};
-
-
 
         ws.onmessage = function (event) {
 
@@ -97,32 +92,32 @@ $(document).ready(
 
             if (answer == "connected")
             {
-                //alert("connected");
                 interlocutorName = jsonGet["interlocutor"];
-                $("#connected_with").text(interlocutorName);
+                $("#interlocutor_name").text("You connected with: " + interlocutorName);
                 $("#main_container").css("visibility", "visible");
             }
 
-
-            //alert(answer);
             if (answer == "message")
             {
-                var clientName = $('#greeting').text().replace("Hello ", "");
+                var clientName = $('#your_name').text().replace("Hello ", "");
                 upDateChatBoxGet(clientName, jsonGet["message"]);
             }
 
             if (answer == "disconnect")
             {
-                //alert("111");
                 $("#stop_chat").prop('disabled', true);
                 $("#start_chat").prop('disabled', false);
                 $("#find_new_interlocutor").prop('disabled', true);
             }
 
-            //upDateChatBoxGet(event.data);
         };
 
         ws.onclose = function (event) {};
+
+
+        var myVideoTrack = initVideo();
+        alert(myVideoTrack);
+
 
         var newmsg_top = parseInt($('.panel-body')[0].scrollHeight);
         $('.panel-body').scrollTop(newmsg_top - 100);
@@ -133,7 +128,7 @@ $(document).ready(
 
         $('#start_chat').click(function () {
             var json_create = new Object();
-            json_create.name = $('#greeting').text().replace("Hello ", "");
+            json_create.name = $('#your_name').text().replace("Hello ", "");
             json_create.command = "connect";
             var json = JSON.stringify(json_create);
             ws.send(json);
@@ -146,7 +141,7 @@ $(document).ready(
         $('#stop_chat').click(function () {
 
             var json_create = new Object();
-            json_create.name = $('#greeting').text().replace("Hello ", "");
+            json_create.name = $('#your_name').text().replace("Hello ", "");
             json_create.command = "disconnect";
             var json = JSON.stringify(json_create);
             ws.send(json);
@@ -159,7 +154,7 @@ $(document).ready(
         $('#find_new_interlocutor').click(function () {
             $('#start_chat').click();
             var json_create = new Object();
-            json_create.name = $('#greeting').text().replace("Hello ", "");
+            json_create.name = $('#your_name').text().replace("Hello ", "");
             json_create.command = "find_interlocutor";
             var json = JSON.stringify(json_create);
             ws.send(json);
@@ -167,9 +162,8 @@ $(document).ready(
 
         $('#btn-chat').click(function () {
             var messageText = $('#text_input').val();
-
             var json_create = new Object();
-            var clientName = $('#greeting').text().replace("Hello ", "");
+            var clientName = $('#your_name').text().replace("Hello ", "");
             json_create.name = clientName;
             json_create.command = "sent_message";
             json_create.message = messageText;

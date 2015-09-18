@@ -52,7 +52,8 @@ public class ControlClass extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //регистрация нового пользователя
 
-        System.out.println("222");
+        System.out.println("111");
+
         StringBuilder jb = new StringBuilder();
         String line = null;
 
@@ -133,7 +134,5 @@ public class ControlClass extends HttpServlet {
         } catch (Exception e) {
             System.out.println(e);
         }
-
-
     }
 }
