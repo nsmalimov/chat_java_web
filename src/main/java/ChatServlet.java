@@ -16,7 +16,7 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-@ServerEndpoint(value = "/chat")
+@ServerEndpoint(value = "/chatwork")
 public class ChatServlet extends HttpServlet {
     private static final Set<Session> sessions = Collections.synchronizedSet(new HashSet<Session>());
 
@@ -31,34 +31,6 @@ public class ChatServlet extends HttpServlet {
         sessions.add(session);
         //freeUsersArray.add(session.getId());
     }
-
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        Cookie cookie = null;
-        Cookie[] cookies = null;
-        cookies = request.getCookies();
-
-        if (cookies != null) {
-            response.setContentType("text/html");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("chat.html");
-            if (dispatcher != null) {
-                dispatcher.forward(request, response);
-            }
-//            for (int i = 0; i < cookies.length; i++) {
-//                cookie = cookies[i];
-//                if ("userKey".equals(cookie.getName())){
-//                    System.out.println(cookie.getValue());
-//                }
-//            }
-        } else {
-            PrintWriter out = response.getWriter();
-            out.println("Permission denied");
-        }
-
-
-    }
-
 
     @OnClose
     public void onClose(Session session) {

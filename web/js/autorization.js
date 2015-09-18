@@ -1,6 +1,6 @@
 function login(serverUrl, jsonData) {
     $.ajax({
-        url: serverUrl + "/auto",
+        url: serverUrl + "/chat",
         type: 'POST',
         data: jsonData,
 

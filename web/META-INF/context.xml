@@ -1,7 +1,2 @@
 <Context>
-    <Resource name="jdbc/myapp"
-              type="javax.sql.DataSource"
-              driverClassName="org.sqlite.JDBC"
-              url="jdbc:sqlite:/home/ubuntu/ChatDatabase.db"
-            />
 </Context>

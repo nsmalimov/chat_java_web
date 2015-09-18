@@ -72,7 +72,7 @@ $(document).ready(
 
         $('#btn-input').val('');
 
-        ws = new WebSocket("ws://" + serverHostName + ":" + portName + "/chat");
+        ws = new WebSocket("ws://" + serverHostName + ":" + portName + "/chatwork");
 
         //alert(serverHostName);
 
