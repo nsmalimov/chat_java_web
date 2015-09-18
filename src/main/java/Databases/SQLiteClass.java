@@ -17,7 +17,7 @@ public class SQLiteClass {
 
     public static void Conn() throws ClassNotFoundException, SQLException, NamingException {
         Class.forName("org.sqlite.JDBC");
-        conn = DriverManager.getConnection("jdbc:sqlite:/Users/Nurislam/Downloads/chat_java_web/ChatDatabase");
+        conn = DriverManager.getConnection("jdbc:sqlite:/home/ubuntu/ChatDatabase");
     }
 
     public static boolean checkKeyGenDb(String keyGen) throws ClassNotFoundException, SQLException {

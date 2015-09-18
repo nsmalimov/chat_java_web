@@ -1,8 +1,14 @@
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.websocket.EncodeException;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
@@ -11,7 +17,7 @@ import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
 @ServerEndpoint(value = "/chat")
-public class ChatServlet {
+public class ChatServlet extends HttpServlet {
     private static final Set<Session> sessions = Collections.synchronizedSet(new HashSet<Session>());
 
     private static final ArrayList<String> freeUsersArray = new ArrayList<String>();
@@ -25,6 +31,34 @@ public class ChatServlet {
         sessions.add(session);
         //freeUsersArray.add(session.getId());
     }
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        Cookie cookie = null;
+        Cookie[] cookies = null;
+        cookies = request.getCookies();
+
+        if (cookies != null) {
+            response.setContentType("text/html");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("chat.html");
+            if (dispatcher != null) {
+                dispatcher.forward(request, response);
+            }
+//            for (int i = 0; i < cookies.length; i++) {
+//                cookie = cookies[i];
+//                if ("userKey".equals(cookie.getName())){
+//                    System.out.println(cookie.getValue());
+//                }
+//            }
+        } else {
+            PrintWriter out = response.getWriter();
+            out.println("Permission denied");
+        }
+
+
+    }
+
 
     @OnClose
     public void onClose(Session session) {

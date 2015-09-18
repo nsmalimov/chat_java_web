@@ -55,7 +55,12 @@ $(document).ready(
         var portName = window.location.port;
 
         if (portName.length == 0){portName = "80"; }
-        var serverPath = serverProtocolName + "//" + serverHostName + ":" + portName + "/";
+        var serverPath = serverProtocolName + "//" + serverHostName + ":" + portName;
+
+        if (serverHostName != "localhost")
+        {
+            serverPath += "/roulette"
+        }
 
         //alert(serverPath);
 
@@ -69,7 +74,7 @@ $(document).ready(
 
         ws = new WebSocket("ws://" + serverHostName + ":" + portName + "/chat");
 
-        alert(serverHostName);
+        //alert(serverHostName);
 
         ws.onopen = function (event) {};
 

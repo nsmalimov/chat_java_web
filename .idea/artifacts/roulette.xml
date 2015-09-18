@@ -1,7 +1,7 @@
 <component name="ArtifactManager">
-  <artifact type="war" name="untitled2:war exploded">
-    <output-path>$PROJECT_DIR$/classes/artifacts/untitled2_war_exploded</output-path>
-    <root id="archive" name="untitled2_war exploded.war">
+  <artifact type="war" name="roulette">
+    <output-path>$PROJECT_DIR$/classes/artifacts/roulette</output-path>
+    <root id="archive" name="roulette.war">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
           <element id="module-output" name="untitled2" />
@@ -13,6 +13,7 @@
       </element>
       <element id="javaee-facet-resources" facet="untitled2/web/Web2" />
       <element id="javaee-facet-resources" facet="untitled2/web/Web" />
+      <element id="file-copy" path="$PROJECT_DIR$/ChatDatabase" />
     </root>
   </artifact>
 </component>

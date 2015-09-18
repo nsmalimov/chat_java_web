@@ -1,6 +1,6 @@
 function login(serverUrl, jsonData) {
     $.ajax({
-        url: serverUrl + "chat",
+        url: serverUrl + "/auto",
         type: 'POST',
         data: jsonData,
 
@@ -9,17 +9,17 @@ function login(serverUrl, jsonData) {
         //contentType: 'application/json',
 
         success: function (data) {
-            //alert(data['answer']);
+            alert(data['answer']);
             if (data['answer'] == "ok") {
-                window.location.href = serverUrl + "chat";
+                window.location.href = serverUrl + "/chat";
             }
             else {
                 alert("incorrect key");
             }
-            //alert("success");
+            alert("success");
         },
         error: function (xhr, status, error) {
-            //alert("error");
+            alert("error");
         }
     });
 }
@@ -44,14 +44,22 @@ $(document).ready(
         var portName = window.location.port;
 
         if (portName.length == 0){portName = "80"; }
-        var serverPath = serverProtocolName + "//" + serverHostName + ":" + portName + "/";
+        var serverPath = serverProtocolName + "//" + serverHostName + ":" + portName;
+
+        if (serverHostName != "localhost")
+        {
+            serverPath += "/roulette"
+        }
 
         $("#NameInput").val("Руслан");
         $("#KeyInput").val("9YQH-E8CI-N2XJ-2YV");
 
         $('#button_sent').click(function () {
             var jsonData = createJson();
+
             login(serverPath, jsonData);
+
+            alert(serverPath);
         });
     }
 );

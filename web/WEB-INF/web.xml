@@ -7,6 +7,16 @@
     <display-name>Servlet project</display-name>
 
     <servlet>
+        <servlet-name>ChatServlet</servlet-name>
+        <servlet-class>ChatServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ChatServlet</servlet-name>
+        <url-pattern>/chat</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>MyServlet</servlet-name>
         <servlet-class>MyServlet</servlet-class>
     </servlet>
@@ -23,7 +33,7 @@
 
     <servlet-mapping>
         <servlet-name>ControlClass</servlet-name>
-        <url-pattern>/chat</url-pattern>
+        <url-pattern>/auto</url-pattern>
     </servlet-mapping>
 
     <servlet>
