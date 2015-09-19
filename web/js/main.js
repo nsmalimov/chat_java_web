@@ -1,5 +1,3 @@
-
-
 var startButton = document.getElementById('startButton');
 var callButton = document.getElementById('callButton');
 var hangupButton = document.getElementById('hangupButton');
@@ -12,28 +10,6 @@ hangupButton.onclick = hangup;
 var startTime;
 var localVideo = document.getElementById('localVideo');
 var remoteVideo = document.getElementById('remoteVideo');
-
-//localVideo.addEventListener('loadedmetadata', function() {
-//    trace('Local video videoWidth: ' + this.videoWidth +
-//        'px,  videoHeight: ' + this.videoHeight + 'px');
-//});
-//
-//remoteVideo.addEventListener('loadedmetadata', function() {
-//    trace('Remote video videoWidth: ' + this.videoWidth +
-//        'px,  videoHeight: ' + this.videoHeight + 'px');
-//});
-//
-//remoteVideo.onresize = function() {
-//    trace('Remote video size changed to ' +
-//        remoteVideo.videoWidth + 'x' + remoteVideo.videoHeight);
-//    // We'll use the first onsize callback as an indication that video has started
-//    // playing out.
-//    if (startTime) {
-//        var elapsedTime = window.performance.now() - startTime;
-//        trace('Setup time: ' + elapsedTime.toFixed(3) + 'ms');
-//        startTime = null;
-//    }
-//};
 
 var localStream;
 var pc1;

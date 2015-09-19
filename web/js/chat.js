@@ -1,4 +1,3 @@
-
 var startButton = $('#startButton');
 var callButton = $('#callButton');
 var hangupButton = $('#hangupButton');
@@ -9,6 +8,9 @@ var localVideo = $('#localVideo');
 var remoteVideo = $('#remoteVideo');
 //alert(remoteVideo);
 
+//var localVideo = null;
+//var remoteVideo = null;
+
 var localStream;
 var pc1;
 var pc2;
@@ -16,6 +18,8 @@ var offerOptions = {
     offerToReceiveAudio: 1,
     offerToReceiveVideo: 1
 };
+
+var some = "12";
 
 function getName(pc) {
     return (pc === pc1) ? 'pc1' : 'pc2';
@@ -28,7 +32,7 @@ function getOtherPc(pc) {
 function gotStream(stream) {
     trace('Received local stream');
     // Call the polyfill wrapper to attach the media stream to this element.
-    attachMediaStream(localVideo, stream);
+    attachMediaStream(document.getElementById('localVideo'), stream);
     localStream = stream;
     $("#callButton").prop('disabled', false);
 }
@@ -46,7 +50,11 @@ function start() {
         });
 }
 
-function call() {
+function call(ws) {
+
+    var localVideo = document.getElementById('localVideo');
+    var remoteVideo = document.getElementById('remoteVideo');
+
     $("#callButton").prop('disabled', true);
     $("#hangupButton").prop('disabled', false);
 
@@ -56,14 +64,19 @@ function call() {
 
     pc1 = new RTCPeerConnection(servers);
     trace('Created local peer connection object pc1');
+
     pc1.onicecandidate = function(e) {
         onIceCandidate(pc1, e);
+        some = "33";
     };
+
+    //alert(some);
 
     pc2 = new RTCPeerConnection(servers);
     trace('Created remote peer connection object pc2');
     pc2.onicecandidate = function(e) {
         onIceCandidate(pc2, e);
+        alert(e.candidate.candidate);
     };
 
     pc1.oniceconnectionstatechange = function(e) {
@@ -120,7 +133,7 @@ function onSetSessionDescriptionError(error) {
 
 function gotRemoteStream(e) {
     // Call the polyfill wrapper to attach the media stream to this element.
-    attachMediaStream(remoteVideo, e.stream);
+    attachMediaStream(document.getElementById('remoteVideo'), e.stream);
     trace('pc2 received remote stream');
 }
 
@@ -298,8 +311,6 @@ $(document).ready(
 
         var ws = new WebSocket("ws://" + serverHostName + ":" + portName + "/chatwork");
 
-        //alert(serverHostName);
-
         ws.onopen = function (event) {};
 
         ws.onmessage = function (event) {
@@ -336,7 +347,6 @@ $(document).ready(
                 $("#start_chat").prop('disabled', false);
                 $("#find_new_interlocutor").prop('disabled', true);
             }
-
         };
 
         ws.onclose = function (event) {};
@@ -353,11 +363,8 @@ $(document).ready(
         });
 
         $('#callButton').click(function () {
-            call();
-            //alert("222");
+            call(ws);
         });
-
-        //alert("333");
 
         $('#hangupButton').click(function () {
             hangup();
@@ -412,11 +419,4 @@ $(document).ready(
 
     }
 );
-
-
-
-
-
-
-
 
