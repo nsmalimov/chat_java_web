@@ -12,6 +12,7 @@ import java.sql.Statement;
 import javax.sql.DataSource;
 import javax.websocket.server.ServerEndpoint;
 
+///11111
 public class MyServlet extends HttpServlet {
 
     private ServletConfig config;
@@ -48,6 +49,7 @@ public class MyServlet extends HttpServlet {
     }
 
     String name = "";
+
     public String getName() {
         Connection conn = null;
         try {
@@ -73,14 +75,13 @@ public class MyServlet extends HttpServlet {
         } catch (NamingException ne) {
             return ne.toString();
             //return "exception 2";
-        }
-        finally {
+        } finally {
             try {
                 if (conn != null) conn.close();
             } catch (SQLException e) {
                 return e.toString();
             }
-    }
+        }
 
         return this.name;
     }

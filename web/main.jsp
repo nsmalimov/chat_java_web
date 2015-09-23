@@ -13,16 +13,18 @@
 <%@ page import="java.util.*, java.text.*" %>
 
 <html>
-  <head>
+<head>
     <title></title>
-  </head>
-  <body>
-  <%
-      out.println("Hello, world!");
-      out.println("This is a JSP web page");
-  %>
-  <h1>Some text1111</h1>
-  <h1>${textA}</h1>
-  <h1>${textB}</h1>
-  </body>
+</head>
+<body>
+<%
+    out.println("Hello, world!");
+    out.println("This is a JSP web page");
+%>
+<h1>Some text1111</h1>
+
+<h1>${textA}</h1>
+
+<h1>${textB}</h1>
+</body>
 </html>

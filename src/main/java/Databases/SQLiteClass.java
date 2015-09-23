@@ -10,59 +10,69 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.*;
 
-public class SQLiteClass
-{
-    static String name = "";
-    public static String getName() {
-        try {
-            Context ctx = new InitialContext();
+public class SQLiteClass {
+    public static Connection conn;
+    public static Statement stat;
+    public static ResultSet rs;
 
+    public static void Conn() throws ClassNotFoundException, SQLException, NamingException {
+        Class.forName("org.sqlite.JDBC");
+        conn = DriverManager.getConnection("jdbc:sqlite:/Users/Nurislam/Downloads/chat_java_web/ChatDatabase");
+    }
 
-            DataSource ds = (DataSource) ctx.lookup("java:comp/env/jdbc/ChatDatabase");
-
-            //System.out.println(1);
-            Connection conn = ds.getConnection();
-            Statement stat = conn.createStatement();
-            ResultSet rs = stat.executeQuery("select userKey from freeUsers");
-            name = rs.getString(0);
-        } catch (SQLException se) {
-            return "exception 1";
-        } catch (NamingException ne) {
-            System.out.println(ne);
-            return "exception 2";
+    public static boolean checkKeyGenDb(String keyGen) throws ClassNotFoundException, SQLException {
+        stat = conn.createStatement();
+        ResultSet rs = stat.executeQuery("select id from keyGens where keyGen = '" + keyGen + "'");
+        while (rs.next()) {
+            rs.close();
+            stat.close();
+            return true;
         }
-        return name;
+
+        rs.close();
+        stat.close();
+        return false;
     }
 
-    public static void main( String args[] )
+    public static void addUserDatabase(String userName, String keyGen) throws ClassNotFoundException, SQLException {
+        stat = conn.createStatement();
+
+        int n = stat.executeUpdate("UPDATE keyGens SET isUse = '1' WHERE keyGen = '" + keyGen + "'");
+
+        try {
+            PreparedStatement statement = conn.prepareStatement("INSERT INTO freeUsers (name,  userKeyGen) VALUES ( ?, ?)");
+            statement.setString(1, userName);
+            statement.setString(2, keyGen);
+
+            statement.execute();
+            statement.close();
+        } catch (Exception e) {
+            //nothing
+        }
+        finally {
+            stat.close();
+        }
+    }
+
+    public static String getNameDb(String keyGen) throws ClassNotFoundException, SQLException
     {
-//        Connection c = null;
-//        try {
-//            Class.forName("org.sqlite.JDBC");
-//            c = DriverManager.getConnection("jdbc:sqlite:ChatDatabase");
-//
-//            Statement stat = c.createStatement();
-//            ResultSet rs = stat.executeQuery("select userKey from freeUsers");
-//            name = rs.getString(0);
-//
-//            System.out.println(name);
-//
-//        } catch ( Exception e ) {
-//            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-//            System.exit(0);
-//        }
-//        System.out.println("Opened database successfully");
-        //System.out.println(getName());
+        stat = conn.createStatement();
+        ResultSet rs = stat.executeQuery("select name from freeUsers where userKeyGen = '" + keyGen + "'");
 
-        ArrayList<String> freeUsersArray = new ArrayList<String>();
-        freeUsersArray.add("111");
+        while (rs.next()) {
+            String answer = rs.getString("name");
+            rs.close();
+            stat.close();
+            return answer;
+        }
 
-        freeUsersArray.remove("sgsklgjkslg");
+        rs.close();
+        stat.close();
 
-        JSONObject jsonToReturn = new JSONObject();
-
-        jsonToReturn.put("JSON", "Hello, World!").toString();
-        System.out.println("Post successful");
+        return "";
     }
 
+    public static void CloseDB() throws ClassNotFoundException, SQLException {
+        conn.close();
+    }
 }
