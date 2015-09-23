@@ -1,4 +1,4 @@
-Text chat on java
+Text chat roulette on java.
 
 Technologies stack: Java 1.8, Servlets, SQLite, JDBC, Javascript, CSS, HTML, WebSockets.
 
