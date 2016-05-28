@@ -37,12 +37,6 @@ public class ControlClass extends HttpServlet {
             if (dispatcher != null) {
                 dispatcher.forward(request, response);
             }
-//            for (int i = 0; i < cookies.length; i++) {
-//                cookie = cookies[i];
-//                if ("userKey".equals(cookie.getName())){
-//                    System.out.println(cookie.getValue());
-//                }
-//            }
         } else {
             PrintWriter out = response.getWriter();
             out.println("Permission denied");
@@ -51,8 +45,6 @@ public class ControlClass extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //регистрация нового пользователя
-
-        System.out.println("111");
 
         StringBuilder jb = new StringBuilder();
         String line = null;
@@ -69,7 +61,6 @@ public class ControlClass extends HttpServlet {
             JSONObject jsonObject = new JSONObject(jb.toString());
             Iterator it = jsonObject.keys();
 
-            //response.setHeader("Content-Type", "text/plain");
             response.setContentType("text/html;charset=UTF-8");
             PrintWriter out = response.getWriter();
 
@@ -120,7 +111,6 @@ public class ControlClass extends HttpServlet {
                             SQLiteClass.CloseDB();
 
                             jsonToReturner.put("answer", nickname);
-                            //System.out.println(jsonToReturner);
                             out.println(jsonToReturner.toString());
                             break;
                         case 3: //who my connector
