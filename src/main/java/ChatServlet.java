@@ -1,20 +1,10 @@
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.*;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.websocket.EncodeException;
-import javax.websocket.OnClose;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
+import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
+import java.io.IOException;
+import java.util.*;
 
 @ServerEndpoint(value = "/chatwork")
 public class ChatServlet extends HttpServlet {
@@ -29,7 +19,6 @@ public class ChatServlet extends HttpServlet {
     @OnOpen
     public void onOpen(Session session) {
         sessions.add(session);
-        //freeUsersArray.add(session.getId());
     }
 
     @OnClose
@@ -85,8 +74,7 @@ public class ChatServlet extends HttpServlet {
             freeUsersArray.add(client.getId());
 
             //если свободных юзеров нет
-            if (freeUsersArray.size() == 1)
-            {
+            if (freeUsersArray.size() == 1) {
                 client.getBasicRemote().sendText("{\"answer\":" + "\"" + "not_free_users" + "\"" + "}");
                 return;
             }

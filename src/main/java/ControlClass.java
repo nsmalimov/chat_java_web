@@ -1,16 +1,18 @@
-import java.io.*;
-import javax.naming.NamingException;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.http.HttpServlet;
-import javax.websocket.server.ServerEndpoint;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.Iterator;
-
 import Databases.SQLiteClass;
 import org.json.JSONObject;
-import org.json.JSONException;
+
+import javax.naming.NamingException;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.Iterator;
 
 public class ControlClass extends HttpServlet {
     public static boolean checkKeyGen(String name, String key) throws ClassNotFoundException, SQLException, NamingException {
@@ -100,8 +102,8 @@ public class ControlClass extends HttpServlet {
                             JSONObject jsonToReturner = new JSONObject();
                             Cookie[] cookies = request.getCookies();
                             String keyGenGetUser = null;
-                            for(Cookie cookie : cookies){
-                                if("userKey".equals(cookie.getName())){
+                            for (Cookie cookie : cookies) {
+                                if ("userKey".equals(cookie.getName())) {
                                     keyGenGetUser = cookie.getValue();
                                 }
                             }

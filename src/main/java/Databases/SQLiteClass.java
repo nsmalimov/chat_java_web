@@ -1,14 +1,7 @@
 package Databases;
 
-import org.json.JSONObject;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.logging.*;
 
 public class SQLiteClass {
     public static Connection conn;
@@ -48,14 +41,12 @@ public class SQLiteClass {
             statement.close();
         } catch (Exception e) {
             //nothing
-        }
-        finally {
+        } finally {
             stat.close();
         }
     }
 
-    public static String getNameDb(String keyGen) throws ClassNotFoundException, SQLException
-    {
+    public static String getNameDb(String keyGen) throws ClassNotFoundException, SQLException {
         stat = conn.createStatement();
         ResultSet rs = stat.executeQuery("select name from freeUsers where userKeyGen = '" + keyGen + "'");
 

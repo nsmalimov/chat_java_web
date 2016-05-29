@@ -39,11 +39,11 @@ function start() {
     trace('Requesting local stream');
     startButton.disabled = true;
     navigator.mediaDevices.getUserMedia({
-        audio: true,
-        video: true
-    })
+            audio: true,
+            video: true
+        })
         .then(gotStream)
-        .catch(function(e) {
+        .catch(function (e) {
             alert('getUserMedia() error: ' + e.name);
         });
 }
@@ -55,27 +55,22 @@ function call() {
     startTime = window.performance.now();
     var videoTracks = localStream.getVideoTracks();
     var audioTracks = localStream.getAudioTracks();
-//    if (videoTracks.length > 0) {
-//        trace('Using video device: ' + videoTracks[0].label);
-//    }
-//    if (audioTracks.length > 0) {
-//        trace('Using audio device: ' + audioTracks[0].label);
-//    }
+
     var servers = null;
     pc1 = new RTCPeerConnection(servers);
     trace('Created local peer connection object pc1');
-    pc1.onicecandidate = function(e) {
+    pc1.onicecandidate = function (e) {
         onIceCandidate(pc1, e);
     };
     pc2 = new RTCPeerConnection(servers);
     trace('Created remote peer connection object pc2');
-    pc2.onicecandidate = function(e) {
+    pc2.onicecandidate = function (e) {
         onIceCandidate(pc2, e);
     };
-    pc1.oniceconnectionstatechange = function(e) {
+    pc1.oniceconnectionstatechange = function (e) {
         onIceStateChange(pc1, e);
     };
-    pc2.oniceconnectionstatechange = function(e) {
+    pc2.oniceconnectionstatechange = function (e) {
         onIceStateChange(pc2, e);
     };
     pc2.onaddstream = gotRemoteStream;
@@ -95,11 +90,11 @@ function onCreateSessionDescriptionError(error) {
 function onCreateOfferSuccess(desc) {
     trace('Offer from pc1\n' + desc.sdp);
     trace('pc1 setLocalDescription start');
-    pc1.setLocalDescription(desc, function() {
+    pc1.setLocalDescription(desc, function () {
         onSetLocalSuccess(pc1);
     }, onSetSessionDescriptionError);
     trace('pc2 setRemoteDescription start');
-    pc2.setRemoteDescription(desc, function() {
+    pc2.setRemoteDescription(desc, function () {
         onSetRemoteSuccess(pc2);
     }, onSetSessionDescriptionError);
     trace('pc2 createAnswer start');
@@ -130,11 +125,11 @@ function gotRemoteStream(e) {
 function onCreateAnswerSuccess(desc) {
     trace('Answer from pc2:\n' + desc.sdp);
     trace('pc2 setLocalDescription start');
-    pc2.setLocalDescription(desc, function() {
+    pc2.setLocalDescription(desc, function () {
         onSetLocalSuccess(pc2);
     }, onSetSessionDescriptionError);
     trace('pc1 setRemoteDescription start');
-    pc1.setRemoteDescription(desc, function() {
+    pc1.setRemoteDescription(desc, function () {
         onSetRemoteSuccess(pc1);
     }, onSetSessionDescriptionError);
 }
@@ -142,10 +137,10 @@ function onCreateAnswerSuccess(desc) {
 function onIceCandidate(pc, event) {
     if (event.candidate) {
         getOtherPc(pc).addIceCandidate(new RTCIceCandidate(event.candidate),
-            function() {
+            function () {
                 onAddIceCandidateSuccess(pc);
             },
-            function(err) {
+            function (err) {
                 onAddIceCandidateError(pc, err);
             }
         );

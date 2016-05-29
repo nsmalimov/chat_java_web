@@ -4,12 +4,7 @@ var hangupButton = $('#hangupButton');
 
 var startTime;
 var localVideo = $('#localVideo');
-//alert(localVideo);
 var remoteVideo = $('#remoteVideo');
-//alert(remoteVideo);
-
-//var localVideo = null;
-//var remoteVideo = null;
 
 var localStream;
 var pc1;
@@ -41,11 +36,11 @@ function start() {
     trace('Requesting local stream');
     $("#startButton").prop('disabled', true);
     navigator.mediaDevices.getUserMedia({
-        audio: true,
-        video: true
-    })
+            audio: true,
+            video: true
+        })
         .then(gotStream)
-        .catch(function(e) {
+        .catch(function (e) {
             alert('getUserMedia() error: ' + e.name);
         });
 }
@@ -65,24 +60,22 @@ function call(ws) {
     pc1 = new RTCPeerConnection(servers);
     trace('Created local peer connection object pc1');
 
-    pc1.onicecandidate = function(e) {
+    pc1.onicecandidate = function (e) {
         onIceCandidate(pc1, e);
         some = "33";
     };
 
-    //alert(some);
-
     pc2 = new RTCPeerConnection(servers);
     trace('Created remote peer connection object pc2');
-    pc2.onicecandidate = function(e) {
+    pc2.onicecandidate = function (e) {
         onIceCandidate(pc2, e);
         alert(e.candidate.candidate);
     };
 
-    pc1.oniceconnectionstatechange = function(e) {
+    pc1.oniceconnectionstatechange = function (e) {
         onIceStateChange(pc1, e);
     };
-    pc2.oniceconnectionstatechange = function(e) {
+    pc2.oniceconnectionstatechange = function (e) {
         onIceStateChange(pc2, e);
     };
 
@@ -90,7 +83,6 @@ function call(ws) {
 
     pc1.addStream(localStream);
 
-    //alert(localStream);
     trace('Added local stream to pc1');
 
     trace('pc1 createOffer start');
@@ -105,11 +97,11 @@ function onCreateSessionDescriptionError(error) {
 function onCreateOfferSuccess(desc) {
     trace('Offer from pc1\n' + desc.sdp);
     trace('pc1 setLocalDescription start');
-    pc1.setLocalDescription(desc, function() {
+    pc1.setLocalDescription(desc, function () {
         onSetLocalSuccess(pc1);
     }, onSetSessionDescriptionError);
     trace('pc2 setRemoteDescription start');
-    pc2.setRemoteDescription(desc, function() {
+    pc2.setRemoteDescription(desc, function () {
         onSetRemoteSuccess(pc2);
     }, onSetSessionDescriptionError);
     trace('pc2 createAnswer start');
@@ -140,11 +132,11 @@ function gotRemoteStream(e) {
 function onCreateAnswerSuccess(desc) {
     trace('Answer from pc2:\n' + desc.sdp);
     trace('pc2 setLocalDescription start');
-    pc2.setLocalDescription(desc, function() {
+    pc2.setLocalDescription(desc, function () {
         onSetLocalSuccess(pc2);
     }, onSetSessionDescriptionError);
     trace('pc1 setRemoteDescription start');
-    pc1.setRemoteDescription(desc, function() {
+    pc1.setRemoteDescription(desc, function () {
         onSetRemoteSuccess(pc1);
     }, onSetSessionDescriptionError);
 }
@@ -152,10 +144,10 @@ function onCreateAnswerSuccess(desc) {
 function onIceCandidate(pc, event) {
     if (event.candidate) {
         getOtherPc(pc).addIceCandidate(new RTCIceCandidate(event.candidate),
-            function() {
+            function () {
                 onAddIceCandidateSuccess(pc);
             },
-            function(err) {
+            function (err) {
                 onAddIceCandidateError(pc, err);
             }
         );
@@ -222,10 +214,8 @@ function getNameServer(serverUrl) {
 
         dataType: 'json',
         async: true,
-        //contentType: 'application/json',
 
         success: function (event) {
-            //var jsonGet = JSON.parse(event.data);
             $('#your_name').text("Hello " + event["answer"]);
         },
         error: function (xhr, status, error) {
@@ -266,10 +256,8 @@ function getNameServer(serverUrl) {
 
         dataType: 'json',
         async: true,
-        //contentType: 'application/json',
 
         success: function (event) {
-            //var jsonGet = JSON.parse(event.data);
             $('#your_name').text("Hello " + event["answer"]);
         },
         error: function (xhr, status, error) {
@@ -283,7 +271,6 @@ $(document).ready(
         $("#callButton").prop('disabled', true);
         $("#hangupButton").prop('disabled', true);
 
-        //$("#startButton").click();
         //имя пользователя другим post запросом
 
         var serverHostName = window.location.hostname;
@@ -292,17 +279,16 @@ $(document).ready(
 
         var portName = window.location.port;
 
-        if (portName.length == 0){portName = "80"; }
+        if (portName.length == 0) {
+            portName = "80";
+        }
         var serverPath = serverProtocolName + "//" + serverHostName + ":" + portName;
 
-        if (serverHostName != "localhost")
-        {
+        if (serverHostName != "localhost") {
             serverPath += "/roulette"
         }
 
         getNameServer(serverPath);
-
-        //$("head").append('<script type="text/javascript" src="' + "js/main.js" + '"></script>');
 
         var interlocutorName = "";
 
@@ -311,7 +297,8 @@ $(document).ready(
 
         var ws = new WebSocket("ws://" + serverHostName + ":" + portName + "/chatwork");
 
-        ws.onopen = function (event) {};
+        ws.onopen = function (event) {
+        };
 
         ws.onmessage = function (event) {
 
@@ -319,37 +306,30 @@ $(document).ready(
 
             var answer = jsonGet["answer"];
 
-            if (answer == "not_free_users")
-            {
+            if (answer == "not_free_users") {
                 $("#main_container").css("visibility", "hidden");
-                //$("#stop_chat").prop('disabled', true);
-                //$("#start_chat").prop('disabled', false);
-                //$("#find_new_interlocutor").prop('disabled', true);
-                //alert("Free users not found");
             }
 
-            if (answer == "connected")
-            {
+            if (answer == "connected") {
                 interlocutorName = jsonGet["interlocutor"];
                 $("#interlocutor_name").text("You connected with: " + interlocutorName);
                 $("#main_container").css("visibility", "visible");
             }
 
-            if (answer == "message")
-            {
+            if (answer == "message") {
                 var clientName = $('#your_name').text().replace("Hello ", "");
                 upDateChatBoxGet(clientName, jsonGet["message"]);
             }
 
-            if (answer == "disconnect")
-            {
+            if (answer == "disconnect") {
                 $("#stop_chat").prop('disabled', true);
                 $("#start_chat").prop('disabled', false);
                 $("#find_new_interlocutor").prop('disabled', true);
             }
         };
 
-        ws.onclose = function (event) {};
+        ws.onclose = function (event) {
+        };
 
         var newmsg_top = parseInt($('.panel-body')[0].scrollHeight);
         $('.panel-body').scrollTop(newmsg_top - 100);
